@@ -1,0 +1,233 @@
+body {
+    background: #b3b3b3;
+    min-height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
+    padding-top: 80px;
+}
+
+body::before {
+    display: none;
+}
+
+/* NAVBAR */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+
+    padding: 18px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(12px);
+}
+
+/* LEFT */
+.nav-left {
+    display: flex;
+    align-items: center;
+}
+
+/* RIGHT */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* LOGO */
+.logo {
+    font-size: 22px;
+    font-weight: 600;
+    color: white;
+}
+
+/* ICON BOX STYLE (same as category icons) */
+.icon {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: white;
+    cursor: pointer;
+    transition: 0.3s ease;
+    text-decoration: none;
+}
+
+.icon:hover {
+    transform: translateY(-2px);
+    border: 1px solid rgba(255,255,255,0.6);
+    box-shadow:
+        0 0 12px rgba(255,255,255,0.5),
+        0 0 25px rgba(255,255,255,0.3);
+}
+
+.icon i {
+    color: white;
+    font-size: 18px;
+    text-decoration: none;
+}
+
+.checkout-container {
+    max-width: 900px;
+    margin: 10px auto;
+    padding: 20px;
+}
+
+.checkout-box{
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 16px;
+    padding: 20px;
+}
+
+.checkout-title{
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #000;
+    border-left: none;
+    padding-left: 0px;
+}
+
+/* EACH ITEM BOX */
+.checkout-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 14px;
+    padding: 15px;
+    margin-bottom: 15px;
+    transition: 0.3s ease;
+}
+
+.checkout-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* IMAGE */
+.checkout-card img {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.253);
+    padding: 5px;
+}
+
+/* INFO */
+.checkout-card .info {
+    flex: 1;
+    margin-left: 15px;
+}
+
+.checkout-card .info h3 {
+    font-size: 16px;
+    margin-bottom: 5px;
+    color: #000;
+}
+
+.checkout-card .info p {
+    font-size: 13px;
+    color: #333;
+}
+
+/* PRICE */
+.checkout-card .price {
+    font-weight: bold;
+    color: #000;
+}
+
+/* SUMMARY BOX */
+.summary-box {
+    margin-top: 25px;
+    padding: 20px;
+
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(14px);
+
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 14px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* ROWS */
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 15px;
+    color: #000;
+}
+
+/* TOTAL STYLE */
+.summary-row.total {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+/* DIVIDER */
+.divider {
+    border: none;
+    height: 1px;
+    background: rgba(0,0,0,0.2);
+}
+
+/* FULL WIDTH BUTTON */
+.place-order-btn {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: black;
+    color: white;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.place-order-btn:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.success-row{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 30px 10px;
+}
+
+.success-icon{
+    font-size: 30px;   
+    color: black;
+    line-height: 1;
+}
+
+.success-text{
+    font-size: 27px;
+    font-weight: 700;
+    color: #000;   
+    margin: 0;
+}

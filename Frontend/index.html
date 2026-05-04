@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Zenvora Living</title>
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">
+        <span>Zenvora</span> Living
+    </div>
+    <div class="nav-links">
+        <a href="#home">Home</a>
+        <a href="#products">Our Service</a>
+        <a href="#contact">Contact Us</a>
+    </div>
+</nav>
+
+<div class="hero-section" id="home">
+    <h1>Elevate the Way You Live</h1>
+    <p>Modern furniture designed for comfort, style, and everyday life.</p>
+    <button onclick="window.location.href='pages/login.html'">Explore Collection</button>
+</div>
+
+<section class="products fade-section" id="products">
+    <h2 class="section-title">Our Products</h2>
+
+    <div class="products-container">
+
+        <div class="product-card">
+            <img src="images/bgd/modernchair.png">
+            <h3>Modern Chair</h3>
+            <p>$120</p>
+        </div>
+
+        <div class="product-card">
+            <img src="images/bgd/modernsofa.png">
+            <h3>Luxury Sofa</h3>
+            <p>$450</p>
+        </div>
+
+        <div class="product-card">
+            <img src="images/bgd/woodentable.png">
+            <h3>Wooden Table</h3>
+            <p>$300</p>
+        </div>
+
+    </div>
+    <h3 class="sub-title">Where Nature Meets Crafts</h3>
+
+<div class="gallery">
+
+    <div class="item">
+        <img src="images/bgd/beambag.png">
+        <p>Modern Sofa</p>
+    </div>
+
+    <div class="item">
+        <img src="images/bgd/self.png">
+        <p>Home Decor</p>
+    </div>
+
+    <div class="item">
+        <img src="images/bgd/bed.png">
+        <p>Comfort Bed</p>
+    </div>
+
+    <div class="item">
+        <img src="images/bgd/lamp.png">
+        <p>Stylish Lamp</p>
+    </div>
+
+    <div class="item">
+        <img src="images/bgd/desk.png">
+        <p>Small Desk</p>
+    </div>
+
+    <div class="item">
+        <img src="images/bgd/officechair.png">
+        <p>Office Chair</p>
+    </div>
+
+</div>
+<br><br><br>
+<h2 class="core-title">Core of Our Business</h2>
+
+    
+    <div class="core-row right-img">
+        <div class="core-text">
+            <h3>Inspired by Nature</h3>
+            <p>We craft furniture using natural materials that bring warmth, simplicity, and timeless beauty into your living spaces.</p>
+        </div>
+        <div class="core-img">
+            <img src="images/bgd/business1.jpg">
+        </div>
+    </div>
+
+    
+    <div class="core-row left-img">
+        <div class="core-img">
+            <img src="images/bgd/business2.jpg">
+        </div>
+        <div class="core-text">
+            <h3>Crafted with Precision</h3>
+            <p>Each piece is carefully designed and built with attention to detail, ensuring durability and refined quality.</p>
+        </div>
+    </div>
+
+    
+    <div class="core-row right-img">
+        <div class="core-text">
+            <h3>Designed for Everyday Living</h3>
+            <p>Our collections blend comfort and style, perfectly suited for modern homes and evolving lifestyles.</p>
+        </div>
+        <div class="core-img">
+            <img src="images/bgd/business3.jpg">
+        </div>
+    </div>
+
+    <section class="features">
+        <div class="feature">
+            <h3>Premium Quality</h3>
+            <p>Best materials used</p>
+        </div>
+    
+        <div class="feature">
+            <h3>Fast Delivery</h3>
+            <p>Quick doorstep delivery</p>
+        </div>
+    
+        <div class="feature">
+            <h3>Easy Returns</h3>
+            <p>7 days return policy</p>
+        </div>
+    </section>
+
+</section>
+
+
+<section class="contact-section fade-section" id="contact">
+
+    <h2 class="contact-title">Contact Us</h2>
+
+    <div class="contact-container">
+
+        
+        <div class="contact-info">
+            <h3>Get in Touch</h3>
+            <p>We’d love to hear from you. Fill the form below.</p>
+
+            <p><b>📍 Address:</b> Coimbatore, Tamil Nadu</p>
+            <p><b>📧 Email:</b> zenvoraliving@gmail.com</p>
+        </div>
+
+        
+        <div class="contact-form">
+
+            <form id="contactForm">
+
+                <input type="text" name="from_name" placeholder="Your Name" required>
+                <input type="email" name="from_email" placeholder="Your Email" required>
+                <input type="text" name="subject" placeholder="Subject">
+
+                <textarea name="message" placeholder="Your Message" required></textarea>
+
+                <button type="submit">Send Message</button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<footer>
+    <p>© 2026 Zenvora Living</p>
+</footer>
+<script>
+    window.addEventListener("scroll", function() {
+    
+        let title = document.querySelector(".section-title");
+        let position = title.getBoundingClientRect().top;
+        let screen = window.innerHeight;
+    
+        if(position < screen - 100) {
+            title.classList.add("show");
+        } else {
+            title.classList.remove("show"); 
+        }
+    
+    });
+    </script>
+
+<script>
+    window.addEventListener("scroll", function() {
+    
+        let title = document.querySelector(".sub-title");
+        let position = title.getBoundingClientRect().top;
+        let screen = window.innerHeight;
+    
+        if(position < screen - 100) {
+            title.classList.add("show");
+        } else {
+            title.classList.remove("show"); 
+        }
+    
+    });
+    </script>
+
+<script>
+    window.addEventListener("scroll", function () {
+    
+        let rows = document.querySelectorAll(".core-row");
+        let title = document.querySelector(".core-title");
+        let screen = window.innerHeight;
+    
+        if (title.getBoundingClientRect().top < screen - 100) {
+            title.classList.add("show");
+        }
+    
+        rows.forEach(row => {
+            if (row.getBoundingClientRect().top < screen - 100) {
+                row.classList.add("show");
+            }
+        });
+    
+    });
+    </script>
+
+<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+<script>
+    (function () {
+        emailjs.init("RK5CZXerHez0VRhrJ"); 
+    })();
+    
+    document.getElementById("contactForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+    
+        emailjs.sendForm(
+            "service_rj91uts",   
+            "template_9szna61",  
+            this
+        ).then(function () {
+            alert("Message Sent Successfully!");
+        }, function (error) {
+            alert("Failed to send message");
+            console.log(error);
+        });
+    
+    });
+    </script>
+
+<script>
+    window.addEventListener("scroll", function() {
+        let navbar = document.querySelector(".navbar");
+    
+        if(window.scrollY > 50) {
+            navbar.classList.add("scrolled");
+        } else {
+            navbar.classList.remove("scrolled");
+        }
+    });
+    </script>
+
+<script>
+    function revealOnScroll(selector, className) {
+        let elements = document.querySelectorAll(selector);
+        let screenHeight = window.innerHeight;
+    
+        elements.forEach((el, index) => {
+            let position = el.getBoundingClientRect().top;
+    
+            if (position < screenHeight - 100) {
+                setTimeout(() => {
+                    el.classList.add(className);
+                }, index * 120);
+            }
+        });
+    }
+    
+    window.addEventListener("scroll", function () {
+        revealOnScroll(".product-card", "show");
+        revealOnScroll(".item", "show");
+        revealOnScroll(".core-row", "show");
+    });
+    </script>
+
+</body>
+</html>

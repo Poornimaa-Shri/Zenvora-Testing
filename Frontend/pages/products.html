@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Products Dashboard</title>
+    <link rel="stylesheet" href="../css/products.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+
+<div class="navbar">
+
+    <div class="logo">
+        Zenvora <span>Living</span>
+    </div>
+
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search Products...">
+    </div>
+
+    <div class="icons">
+
+        <div class="icon" onclick="goToWishlist()">
+            <i class="fa-regular fa-heart"></i>
+        </div>
+        
+        <div class="icon" onclick="goToCart()" style="position:relative;">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span id="cartCount" class="badge">0</span>
+        </div>
+    
+        <div class="profile">
+            <div class="icon profile-btn">
+                <i class="fa-regular fa-user"></i>
+            </div>
+        
+            <div class="dropdown" id="profileMenu">
+                <div class="user-name" id="userDisplay">User</div>
+        
+                <a href="orders.html">My Orders</a>
+                <a href="#" id="logoutBtn">Logout</a>
+            </div>
+        </div>
+    
+    </div>
+</div>
+
+<div class="split-hero">
+
+    <div class="hero-left">
+        <h1>Redefine Your Living Space</h1>
+
+        <p>Elegant furniture crafted for modern comfort</p>
+
+        <div class="hero-stats">
+            <div class="stat">
+                <h3>1800+</h3>
+                <p>Products</p>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="stat">
+                <h3>500+</h3>
+                <p>Brands</p>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="stat">
+                <h3>50K+</h3>
+                <p>Happy Customers</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero-right">
+        <img src="../images/bgd/bg3.png" class="top-img">
+        <img src="../images/bgd/bg2.png" class="main-img">
+    </div>
+
+</div>
+
+<div class="category-section">
+
+    <button class="cat-btn living" onclick="goToCategory('living')">
+        <span>Living Room</span>
+    </button>
+    
+    <button class="cat-btn bedroom" onclick="goToCategory('bedroom')">
+        <span>Bedroom</span>
+    </button>
+    
+    <button class="cat-btn dining" onclick="goToCategory('dining')">
+        <span>Dining</span>
+    </button>
+    
+    <button class="cat-btn kitchen" onclick="goToCategory('kitchen')">
+        <span>Kitchen</span>
+    </button>
+    
+    <button class="cat-btn office" onclick="goToCategory('office')">
+        <span>Office</span>
+    </button>
+    
+    <button class="cat-btn outdoor" onclick="goToCategory('outdoor')">
+        <span>Outdoor</span>
+    </button>
+
+</div>
+
+<div id="products"></div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    
+        const profileBtn = document.querySelector(".profile-btn");
+        const profileMenu = document.getElementById("profileMenu");
+        const logoutBtn = document.getElementById("logoutBtn");
+    
+        let user = localStorage.getItem("user");
+        if (user) {
+            document.getElementById("userDisplay").innerText = "Hi, " + user;
+        }
+    
+        profileBtn.addEventListener("click", function (e) {
+            e.stopPropagation();
+            profileMenu.classList.toggle("show");
+        });
+    
+        logoutBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+    
+            localStorage.removeItem("user");
+    
+            window.location.href = "login.html";
+        });
+    
+        document.addEventListener("click", function () {
+            profileMenu.classList.remove("show");
+        });
+    
+    });
+    </script>
+
+<script>
+    let cartItems = [];
+    fetch("http://localhost:8081/products")
+.then(res => res.json())
+.then(data => {
+
+const container = document.getElementById("products");
+container.innerHTML = "";
+
+const categories = ["living", "bedroom", "dining", "kitchen", "office", "outdoor"];
+
+categories.forEach(cat => {
+
+    let filtered = data
+        .filter(item => item.category === cat)
+        .slice(0, 4);
+
+    filtered.forEach(item => {
+        container.innerHTML += `
+        <div class="product-card">
+
+            <img src="../images/${item.image}">
+
+            <div class="product-info">
+
+                <h3>${item.name}</h3>
+                <p>₹${item.price}</p>
+
+                <div class="product-bottom">
+                    <div class="rating">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-regular fa-star"></i>
+                    </div>
+    
+                        <div class="actions">
+                            <i class="fa-regular fa-heart wishlist-btn" data-id="${item.id}"></i>
+                            <i class="fa-solid fa-cart-shopping cart-btn" data-id="${item.id}"></i>
+                        </div>
+                    </div>
+
+            </div>
+
+        </div>
+        `;
+    });
+
+});
+loadWishlistState();
+loadCartState();
+loadCartCount();
+
+});
+</script>
+
+<script>
+    function goToCategory(cat) {
+        window.location.href = `category.html?cat=${cat}`;
+    }
+    </script>
+
+    <script>
+        function goToCart() {
+    window.location.href = "cart.html";
+}
+
+function goToWishlist() {
+    window.location.href = "wishlist.html"; 
+}
+    </script>
+
+<script>
+    function loadCartCount() {
+
+let username = localStorage.getItem("user");
+
+if (!username) return;
+
+fetch(`http://localhost:8081/cart/count/${username}`)
+.then(res => res.json())
+.then(data => {
+
+    let badge = document.getElementById("cartCount");
+    let count = data.count;
+
+    if (count == 0) {
+        badge.style.display = "none";
+    } 
+    else {
+        badge.style.display = "flex";
+        badge.innerText = count;
+
+        badge.classList.add("animate");
+
+        setTimeout(() => {
+            badge.classList.remove("animate");
+        }, 300);
+    }
+});
+}   
+    
+    function toggleCart(productId, element) {
+
+let username = localStorage.getItem("user");
+
+if (element.classList.contains("active")) {
+
+    fetch("http://localhost:8081/cart/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, product_id: productId })
+    })
+    .then(() => {
+        element.classList.remove("active");
+        loadCartCount();   
+        updateCartBadgeGlobal();
+    });
+
+} else {
+
+    fetch("http://localhost:8081/cart/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, product_id: productId })
+    })
+    .then(() => {
+        element.classList.add("active");
+        loadCartCount();   
+        updateCartBadgeGlobal();
+    });
+}
+}
+    
+    loadCartCount();
+
+function loadCart() {
+
+let username = localStorage.getItem("user");
+
+fetch(`http://localhost:8081/cart/${username}`)
+.then(res => res.json())
+.then(data => {
+
+    let container = document.querySelector(".cart-left");
+    container.innerHTML = "";
+
+    let total = 0;
+
+    data.forEach(item => {
+
+        total += item.price * item.quantity;
+
+        container.innerHTML += `
+        <div class="cart-item">
+
+            <div class="cart-img">
+                <img src="../images/${item.image}">
+            </div>
+
+            <div class="cart-details">
+
+                <h3>${item.name}</h3>
+
+                <div class="qty-box">
+
+                    <button onclick="decreaseQty(${item.id})">-</button>
+
+                    <span>${item.quantity}</span>
+
+                    <button onclick="increaseQty(${item.id})">+</button>
+
+                    <i class="fa-solid fa-trash delete"
+                       onclick="deleteItem(${item.id})"></i>
+
+                </div>
+            </div>
+
+            <div class="cart-price">
+                ₹${item.price}
+            </div>
+
+        </div>
+        `;
+    });
+
+    document.querySelector(".summary-row.total span:last-child")
+    .innerText = "₹" + total;
+
+});
+
+}   
+
+function increaseQty(productId) {
+
+let username = localStorage.getItem("user");
+
+fetch("http://localhost:8081/cart/increase", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+        username,
+        product_id: productId
+    })
+})
+.then(() => loadCart());
+
+}
+
+function decreaseQty(productId) {
+
+let username = localStorage.getItem("user");
+
+fetch("http://localhost:8081/cart/decrease", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+        username,
+        product_id: productId
+    })
+})
+.then(() => loadCart());
+
+}
+
+function deleteItem(productId) {
+
+let username = localStorage.getItem("user");
+
+fetch("http://localhost:8081/cart/delete", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+        username,
+        product_id: productId
+    })
+})
+.then(() => loadCart());
+
+}
+
+function loadCartState() {
+
+let username = localStorage.getItem("user");
+
+if (!username) return;
+
+fetch(`http://localhost:8081/cart/exists/${username}`)
+.then(res => res.json())
+.then(data => {
+
+    cartItems = data;
+
+    document.querySelectorAll(".cart-btn").forEach(btn => {
+
+        let id = parseInt(btn.getAttribute("data-id"));
+
+        if (cartItems.includes(id)) {
+    btn.classList.add("active");
+} else {
+    btn.classList.remove("active");
+}
+    });
+});
+
+}
+
+document.addEventListener("click", function (e) {
+
+if (e.target.classList.contains("cart-btn")) {
+
+    let id = e.target.getAttribute("data-id");
+    toggleCart(id, e.target);
+
+    e.target.classList.add("animate");
+    setTimeout(() => {
+        e.target.classList.remove("animate");
+    }, 300);
+}
+
+if (e.target.classList.contains("wishlist-btn")) {
+
+let productId = e.target.getAttribute("data-id");
+let username = localStorage.getItem("user");
+
+e.target.classList.add("bounce");
+
+setTimeout(() => {
+    e.target.classList.remove("bounce");
+}, 400);
+
+if (e.target.classList.contains("active")) {
+
+    fetch("http://localhost:8081/wishlist/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, product_id: productId })
+    })
+    .then(() => {
+        e.target.classList.remove("active","fa-solid");
+        e.target.classList.add("fa-regular");
+    });
+
+} else {
+
+    fetch("http://localhost:8081/wishlist/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, product_id: productId })
+    })
+    .then(() => {
+        e.target.classList.add("active","fa-solid");
+        e.target.classList.remove("fa-regular");
+    });
+
+}
+}
+
+});
+    </script>
+    
+    <script>
+        function loadWishlistState() {
+
+let username = localStorage.getItem("user");
+if (!username) return;
+
+fetch(`http://localhost:8081/wishlist/exists/${username}`)
+.then(res => res.json())
+.then(data => {
+
+    document.querySelectorAll(".wishlist-btn").forEach(btn => {
+
+        let id = parseInt(btn.getAttribute("data-id"));
+
+        if (data.includes(id)) {
+            btn.classList.add("active");
+            btn.classList.add("fa-solid");
+            btn.classList.remove("fa-regular");
+        } else {
+            btn.classList.remove("active");
+            btn.classList.remove("fa-solid");
+            btn.classList.add("fa-regular");
+        }
+
+    });
+
+});
+} 
+    </script>
+
+<script>
+    function updateCartBadgeGlobal() {
+
+let username = localStorage.getItem("user");
+if (!username) return;
+
+fetch(`http://localhost:8081/cart/count/${username}`)
+.then(res => res.json())
+.then(data => {
+
+let badge = document.getElementById("cartCount");
+if (!badge) return;
+
+let count = data.count || 0;
+
+if (count == 0) {
+    badge.style.display = "none";
+} else {
+    badge.style.display = "flex";
+    badge.innerText = count;
+
+    badge.classList.add("animate");
+    setTimeout(() => {
+        badge.classList.remove("animate");
+    }, 300);
+}
+});
+}
+</script>
+
+<script>
+    let allProducts = [];
+
+fetch("http://localhost:8081/products")
+.then(res => res.json())
+.then(data => {
+
+    allProducts = data;
+
+    const container = document.getElementById("products");
+    container.innerHTML = "";
+
+    const categories = ["living", "bedroom", "dining", "kitchen", "office", "outdoor"];
+
+    categories.forEach(cat => {
+
+        let filtered = data
+            .filter(item => item.category === cat)
+            .slice(0, 4);
+
+        filtered.forEach(item => {
+            container.innerHTML += `
+            <div class="product-card">
+
+                <img src="../images/${item.image}">
+
+                <div class="product-info">
+
+                    <h3>${item.name}</h3>
+                    <p>₹${item.price}</p>
+
+                    <div class="product-bottom">
+                        <div class="rating">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-regular fa-star"></i>
+                        </div>
+
+                        <div class="actions">
+                            <i class="fa-regular fa-heart wishlist-btn" data-id="${item.id}"></i>
+                            <i class="fa-solid fa-cart-shopping cart-btn" data-id="${item.id}"></i>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            `;
+        });
+
+    });
+
+    loadWishlistState();
+    loadCartState();
+    loadCartCount();
+});
+
+document.getElementById("searchInput").addEventListener("input", function () {
+
+let value = this.value.toLowerCase().trim();
+
+const container = document.getElementById("products");
+container.innerHTML = "";
+
+if (value === "") {
+
+    const categories = ["living", "bedroom", "dining", "kitchen", "office", "outdoor"];
+
+    categories.forEach(cat => {
+
+        let filtered = allProducts
+            .filter(item => item.category === cat)
+            .slice(0, 4);
+
+        filtered.forEach(item => {
+            container.innerHTML += `
+            <div class="product-card">
+
+                <img src="../images/${item.image}">
+
+                <div class="product-info">
+
+                    <h3>${item.name}</h3>
+                    <p>₹${item.price}</p>
+
+                    <div class="product-bottom">
+                        <div class="rating">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-regular fa-star"></i>
+                        </div>
+
+                        <div class="actions">
+                            <i class="fa-regular fa-heart wishlist-btn" data-id="${item.id}"></i>
+                            <i class="fa-solid fa-cart-shopping cart-btn" data-id="${item.id}"></i>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            `;
+        });
+
+    });
+
+    return;
+}
+
+let filtered = allProducts.filter(p =>
+    (p.name + " " + p.category).toLowerCase().includes(value)
+);
+
+filtered.forEach(item => {
+    container.innerHTML += `
+    <div class="product-card">
+
+        <img src="../images/${item.image}">
+
+        <div class="product-info">
+
+            <h3>${item.name}</h3>
+            <p>₹${item.price}</p>
+
+            <div class="product-bottom">
+                <div class="rating">
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-regular fa-star"></i>
+                </div>
+
+                <div class="actions">
+                    <i class="fa-regular fa-heart wishlist-btn" data-id="${item.id}"></i>
+                    <i class="fa-solid fa-cart-shopping cart-btn" data-id="${item.id}"></i>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    `;
+});
+
+});
+</script>
+
+<script>
+    document.getElementById("searchInput").addEventListener("keypress", function (e) {
+    if (e.key === "Enter") {
+
+        this.dispatchEvent(new Event("input"));
+
+        document.getElementById("products").scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
+});
+    </script>
+
+</body>
+</html>
+

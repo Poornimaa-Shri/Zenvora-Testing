@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="../css/login.css">
+</head>
+<body>
+
+<div class="login-box" id="loginBox">
+    <h2>Welcome Back</h2>
+    <input type="text" id="loginUser" placeholder="Username">
+    <input type="password" id="loginPass" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <p id="loginMsg"></p>
+    <p class="link-text">Don't have an account? <a href="#" onclick="showSignup()">Sign up</a></p>
+</div>
+
+<div class="signup-box" id="signupBox">
+    <h2>Create Account</h2>
+    <input type="text" id="signupUser" placeholder="Username">
+    <input type="password" id="signupPass" placeholder="Password">
+    <button onclick="signup()">Sign Up</button>
+    <p id="signupMsg"></p>
+    <p class="link-text">Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+</div>
+
+<script src="../js/login.js"></script>
+<script>
+function showSignup() {
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("signupBox").style.display = "block";
+}
+
+function showLogin() {
+    document.getElementById("signupBox").style.display = "none";
+    document.getElementById("loginBox").style.display = "block";
+}
+</script>
+
+</body>
+</html>

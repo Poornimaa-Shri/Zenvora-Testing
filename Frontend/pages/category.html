@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Category</title>
+
+    <link rel="stylesheet" href="../css/category.css">
+    <link rel="stylesheet" href="../css/products.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+<body>
+
+
+<div class="navbar">
+
+    <div class="logo">Zenvora <span>Living</span></div>
+
+    <div class="page-title" id="pageTitle">Category</div>
+
+    <div class="icons">
+
+        <a href="products.html" class="icon home-icon">
+            <i class="fa-solid fa-house"></i>
+        </a>
+        
+        <div class="icon" id="filterBtn">
+            <i class="fa-solid fa-sliders"></i>
+        </div>
+
+        <div class="icon" onclick="goToWishlist()">
+            <i class="fa-regular fa-heart"></i>
+        </div>
+
+        <div class="icon" onclick="goToCart()" style="position:relative;">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span id="cartCount" class="badge">0</span>
+        </div>
+
+        <div class="profile">
+            <div class="icon profile-btn">
+                <i class="fa-regular fa-user"></i>
+            </div>
+
+            <div class="dropdown" id="profileMenu">
+                <div class="user-name" id="userDisplay">User</div>
+                <a href="orders.html">My Orders</a>
+                <a href="#" id="logoutBtn">Logout</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="filter-menu" id="filterMenu">
+    <p data-sort="low">Price: Low to High</p>
+    <p data-sort="high">Price: High to Low</p>
+</div>
+
+<div class="sub-category" id="subCategory"></div>
+
+<div id="products"></div>
+
+<script>
+
+    const params = new URLSearchParams(window.location.search);
+    const category = params.get("cat");
+
+if (category) {
+    document.getElementById("pageTitle").innerText =
+        category.charAt(0).toUpperCase() + category.slice(1);
+}
+    
+    let allProducts = [];
+    
+    fetch("http://localhost:8081/products")
+    .then(res => res.json())
+    .then(data => {
+    
+        allProducts = data.filter(item => item.category === category);
+        displayProducts(allProducts);
+    
+        let subList = [...new Set(allProducts.map(p => p.subcategory))];
+        loadSubCategories(subList);
+    });
+    
+    function displayProducts(products) {
+    
+        const container = document.getElementById("products");
+        container.innerHTML = "";
+    
+        products.forEach(item => {
+            container.innerHTML += `
+            <div class="product-card">
+    
+                <img src="../images/${item.image}">
+    
+                <div class="product-info">
+    
+                    <h3>${item.name}</h3>
+                    <p>₹${item.price}</p>
+    
+                    <div class="product-bottom">
+                        <div class="rating">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-regular fa-star"></i>
+                        </div>
+    
+                        <div class="actions">
+                            <i class="fa-regular fa-heart wishlist-btn" data-id="${item.id}"></i>
+                            <i class="fa-solid fa-cart-shopping cart-btn" data-id="${item.id}"></i>
+                        </div>
+                    </div>
+    
+                </div>
+    
+            </div>
+            `;
+        });
+        loadCartState();
+        loadWishlistState();
+    }
+    
+    function loadSubCategories(list) {
+
+const container = document.getElementById("subCategory");
+container.innerHTML = "";
+
+list.forEach((item, index) => {
+
+    let btn = document.createElement("button");
+    btn.innerHTML = `<span>${item}</span>`;
+    btn.classList.add("sub-btn");
+
+    if (index === 0) {
+        btn.classList.add("active");
+
+        let filtered = allProducts.filter(p => p.subcategory === item);
+        displayProducts(filtered);
+    }
+
+    btn.addEventListener("click", () => {
+
+        document.querySelectorAll(".sub-btn")
+            .forEach(b => b.classList.remove("active"));
+
+        btn.classList.add("active");
+
+        let filtered = allProducts.filter(p => p.subcategory === item);
+        displayProducts(filtered);
+    });
+
+    container.appendChild(btn);
+});
+}
+    
+    const filterBtn = document.getElementById("filterBtn");
+    const filterMenu = document.getElementById("filterMenu");
+    
+    filterBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+    
+        profileMenu.classList.remove("show");
+    
+        filterMenu.style.display =
+            filterMenu.style.display === "flex" ? "none" : "flex";
+    });
+    
+    document.querySelectorAll(".filter-menu p").forEach(option => {
+    
+        option.addEventListener("click", () => {
+    
+            let type = option.dataset.sort;
+            let sorted = [...allProducts];
+    
+            if (type === "low") {
+                sorted.sort((a, b) => a.price - b.price);
+            }
+            else if (type === "high") {
+                sorted.sort((a, b) => b.price - a.price);
+            }
+            else if (type === "new") {
+                sorted.reverse();
+            }
+    
+            displayProducts(sorted);
+            filterMenu.style.display = "none";
+        });
+    
+    });
+    
+    let user = localStorage.getItem("user");
+    
+    if (user) {
+        document.getElementById("userDisplay").innerText = "Hi, " + user;
+    }
+    
+    const profileBtn = document.querySelector(".profile-btn");
+    const profileMenu = document.getElementById("profileMenu");
+    
+    profileBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+    
+        filterMenu.style.display = "none";
+    
+        profileMenu.classList.toggle("show");
+    });
+    
+    const logoutBtn = document.getElementById("logoutBtn");
+    
+    logoutBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+    
+        localStorage.removeItem("user");
+    
+        window.location.href = "login.html";
+    });
+    
+    document.addEventListener("click", () => {
+        filterMenu.style.display = "none";
+        profileMenu.classList.remove("show");
+    });
+    
+    </script>
+
+<script>
+
+    function loadCartCount() {
+    
+        let username = localStorage.getItem("user");
+        if (!username) return;
+    
+        fetch(`http://localhost:8081/cart/count/${username}`)
+        .then(res => res.json())
+        .then(data => {
+    
+            let badge = document.getElementById("cartCount");
+    
+            if (data.count == 0) {
+                badge.style.display = "none";
+            } else {
+                badge.style.display = "flex";
+                badge.innerText = data.count;
+    
+                badge.classList.add("animate");
+    
+                setTimeout(() => {
+                    badge.classList.remove("animate");
+                }, 300);
+            }
+        });
+    }
+    
+    function toggleCart(productId, element) {
+
+let username = localStorage.getItem("user");
+
+if (element.classList.contains("active")) {
+
+    fetch("http://localhost:8081/cart/delete", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            username: username,
+            product_id: productId
+        })
+    })
+    .then(res => res.text())
+    .then(() => {
+        element.classList.remove("active"); // remove color
+        loadCartCount();
+    });
+
+} 
+else {
+
+    fetch("http://localhost:8081/cart/add", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            username: username,
+            product_id: productId
+        })
+    })
+    .then(res => res.text())
+    .then(() => {
+        element.classList.add("active"); // add color
+        loadCartCount();
+    });
+}
+}
+
+    function goToCart() {
+        window.location.href = "cart.html";
+    }
+    function goToWishlist() {
+    window.location.href = "wishlist.html"; 
+}
+    
+    loadCartCount();
+
+    function loadCartState() {
+
+let username = localStorage.getItem("user");
+if (!username) return;
+
+fetch(`http://localhost:8081/cart/exists/${username}`)
+.then(res => res.json())
+.then(data => {
+
+    document.querySelectorAll(".cart-btn").forEach(btn => {
+
+        let id = parseInt(btn.getAttribute("data-id"));
+
+        if (data.includes(id)) {
+            btn.classList.add("active");
+        } else {
+            btn.classList.remove("active");
+        }
+    });
+});
+}
+    
+    </script>
+
+    <script>
+        document.addEventListener("click", function (e) {
+
+if (e.target.classList.contains("cart-btn")) {
+
+    let id = e.target.getAttribute("data-id");
+
+    toggleCart(id, e.target);
+
+    e.target.classList.add("animate");
+
+    setTimeout(() => {
+        e.target.classList.remove("animate");
+    }, 300);
+}
+});
+    </script>
+
+    <script>
+        document.addEventListener("click", function (e) {
+
+            if (e.target.classList.contains("wishlist-btn")) {
+
+let productId = e.target.getAttribute("data-id");
+let username = localStorage.getItem("user");
+
+e.target.classList.add("bounce");
+setTimeout(() => e.target.classList.remove("bounce"), 400);
+
+if (e.target.classList.contains("active")) {
+
+    fetch("http://localhost:8081/wishlist/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, product_id: productId })
+    })
+    .then(() => {
+        e.target.classList.remove("active", "fa-solid");
+        e.target.classList.add("fa-regular");
+    });
+
+} else {
+
+    fetch("http://localhost:8081/wishlist/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, product_id: productId })
+    })
+    .then(() => {
+        e.target.classList.add("active", "fa-solid");
+        e.target.classList.remove("fa-regular");
+    });
+
+}
+}
+
+});
+    </script>
+
+    <script>
+    function loadWishlistState() {
+
+let username = localStorage.getItem("user");
+if (!username) return;
+
+fetch(`http://localhost:8081/wishlist/exists/${username}`)
+.then(res => res.json())
+.then(data => {
+
+    document.querySelectorAll(".wishlist-btn").forEach(btn => {
+
+        let id = parseInt(btn.getAttribute("data-id"));
+
+        if (data.includes(id)) {
+            btn.classList.add("active");
+            btn.classList.add("fa-solid");
+            btn.classList.remove("fa-regular");
+        } else {
+            btn.classList.remove("active");
+            btn.classList.remove("fa-solid");
+            btn.classList.add("fa-regular");
+        }
+
+    });
+
+});
+}
+
+window.onload = function () {
+    loadCartCount();
+    loadWishlistState();   
+};
+    </script>
+
+</body>
+</html>

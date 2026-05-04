@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wishlist</title>
+
+    <link rel="stylesheet" href="../css/wishlist.css">
+    <link rel="stylesheet" href="../css/products.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+
+<div class="navbar">
+
+    <div class="nav-left">
+        <div class="logo">Zenvora <span>Living</span></div>
+    </div>
+
+    <div class="nav-right">
+
+        <a href="products.html" class="icon-box">
+            <i class="fa-solid fa-house"></i>
+        </a>
+
+        <a href="cart.html" class="icon-box" style="position:relative;">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span id="cartCount" class="badge">0</span>
+        </a>
+
+        
+        <div class="profile">
+            <div class="icon profile-btn">
+                <i class="fa-regular fa-user"></i>
+            </div>
+        
+            <div class="dropdown" id="profileMenu">
+                <div class="user-name" id="userDisplay">User</div>
+        
+                <a href="orders.html">My Orders</a>
+                <a href="#" id="logoutBtn">Logout</a>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="wishlist-box">
+
+    <h2 class="wishlist-title">
+        Wishlist (<span id="wishlistCount">0</span>)
+    </h2>
+
+    <div class="wishlist-container"></div>
+
+</div>
+
+<script>
+function loadWishlist() {
+
+    let username = localStorage.getItem("user");
+
+    fetch(`http://localhost:8081/wishlist/${username}`)
+    .then(res => res.json())
+    .then(data => {
+
+        let container = document.querySelector(".wishlist-container");
+        container.innerHTML = "";
+
+        let count = 0;
+
+        data.forEach(item => {
+
+            count++;
+
+            container.innerHTML += `
+<div class="wishlist-item">
+
+    <img src="../images/${item.image}" class="wish-img">
+
+    <div class="wish-details">
+        <h3>${item.name}</h3>
+        <p>₹${item.price}</p>
+    </div>
+
+    <div class="wish-actions">
+
+    <i class="fa-solid fa-cart-shopping action-icon cart-icon"
+       onclick="moveToCart(${item.product_id})"></i>
+
+    <i class="fa-solid fa-trash delete delete-icon"
+       onclick="removeWishlist(${item.product_id})"></i>
+    </div>
+
+</div>
+`;
+        });
+
+        document.getElementById("wishlistCount").innerText = count;
+
+    });
+}
+
+window.onload = function () {
+    loadWishlist();
+    updateCartBadge();
+};
+
+
+function removeWishlist(id){
+    let username = localStorage.getItem("user");
+
+    fetch("http://localhost:8081/wishlist/delete", {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({
+            username: username,
+            product_id: id
+        })
+    })
+    .then(res => res.text())
+    .then(() => loadWishlist());
+}
+
+function moveToCart(id){
+    let username = localStorage.getItem("user");
+
+    fetch("http://localhost:8081/cart/add", {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({
+            username: username,
+            product_id: id
+        })
+    })
+    .then(res => res.text())
+    .then(() => {
+
+        return fetch("http://localhost:8081/wishlist/delete", {
+            method:"POST",
+            headers:{ "Content-Type":"application/json" },
+            body: JSON.stringify({
+                username: username,
+                product_id: id
+            })
+        });
+
+    })
+    .then(() => {
+        loadWishlist();
+        updateCartBadge();
+    });
+}
+</script>
+
+<script>
+    function updateCartBadge() {
+
+let username = localStorage.getItem("user");
+if (!username) return;
+
+fetch(`http://localhost:8081/cart/count/${username}`)
+.then(res => res.json())
+.then(data => {
+
+    let badge = document.getElementById("cartCount");
+    let count = data.count || 0;
+
+    if (!badge) return;
+
+    if (count == 0) {
+        badge.style.display = "none";
+    } else {
+        badge.style.display = "flex";
+        badge.innerText = count;
+        badge.classList.add("animate");
+
+        setTimeout(() => {
+            badge.classList.remove("animate");
+        }, 300);
+    }
+});
+}
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    
+        const profileBtn = document.querySelector(".profile-btn");
+        const profileMenu = document.getElementById("profileMenu");
+        const logoutBtn = document.getElementById("logoutBtn");
+    
+        let user = localStorage.getItem("user");
+        if (user) {
+            document.getElementById("userDisplay").innerText = "Hi, " + user;
+        }
+    
+        profileBtn.addEventListener("click", function (e) {
+            e.stopPropagation();
+            profileMenu.classList.toggle("show");
+        });
+    
+        logoutBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+    
+            localStorage.removeItem("user");
+            window.location.href = "login.html";
+        });
+    
+        document.addEventListener("click", function () {
+            profileMenu.classList.remove("show");
+        });
+    
+    });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Checkout</title>
+    <link rel="stylesheet" href="../css/products.css">
+    <link rel="stylesheet" href="../css/checkout.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<div class="navbar">
+
+    <div class="nav-left">
+        <div class="logo">
+            Zenvora <span>Living</span>
+        </div>
+    </div>
+
+    <div class="nav-right">
+
+        <a href="products.html" class="icon">
+            <i class="fa-solid fa-house"></i>
+        </a>
+
+        <div class="profile">
+            <div class="icon profile-btn">
+                <i class="fa-regular fa-user"></i>
+            </div>
+
+            <div class="dropdown" id="profileMenu">
+                <div class="user-name" id="userDisplay">User</div>
+                <a href="orders.html">My Orders</a>
+                <a href="#" id="logoutBtn">Logout</a>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="checkout-container">
+
+    <div class="checkout-box">
+
+        <h2 class="checkout-title">Your Orders</h2>
+
+        <div id="checkoutItems"></div>
+
+        <hr class="divider">
+
+        <div class="summary-box">
+
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span id="checkoutTotal">₹0</span>
+            </div>
+
+            <div class="summary-row total">
+                <span>Total</span>
+                <span id="finalTotal">₹0</span>
+            </div>
+
+            <button class="place-order-btn" onclick="placeOrder()">
+                Place Order
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+const profileBtn = document.querySelector(".profile-btn");
+const profileMenu = document.getElementById("profileMenu");
+const logoutBtn = document.getElementById("logoutBtn");
+
+let user = localStorage.getItem("user");
+if (user) {
+    document.getElementById("userDisplay").innerText = "Hi, " + user;
+}
+
+profileBtn.addEventListener("click", function (e) {
+    e.stopPropagation();
+    profileMenu.classList.toggle("show");
+});
+
+logoutBtn.addEventListener("click", function (e) {
+    e.preventDefault();
+    localStorage.removeItem("user");
+    window.location.href = "login.html";
+});
+
+document.addEventListener("click", function () {
+    profileMenu.classList.remove("show");
+});
+
+});
+</script>
+
+<script>
+    function loadCheckout() {
+
+let username = localStorage.getItem("user");
+
+fetch(`http://localhost:8081/cart/${username}`)
+.then(res => res.json())
+.then(data => {
+
+    let container = document.getElementById("checkoutItems");
+    container.innerHTML = "";
+
+    let total = 0;
+
+    data.forEach(item => {
+
+        total += item.price * item.quantity;
+
+        container.innerHTML += `
+        <div class="checkout-card">
+
+            <img src="../images/${item.image}">
+
+            <div class="info">
+                <h3>${item.name}</h3>
+                <p>Qty: ${item.quantity}</p>
+            </div>
+
+            <div class="price">
+                ₹${item.price * item.quantity}
+            </div>
+
+        </div>
+        `;
+    });
+
+    document.getElementById("checkoutTotal").innerText = "₹" + total;
+    document.getElementById("finalTotal").innerText = "₹" + total;
+});
+}
+
+window.onload = loadCheckout;
+    </script>
+
+    <script>
+        function placeOrder() {
+
+let username = localStorage.getItem("user");
+
+if (!username) {
+    alert("Login required");
+    return;
+}
+
+fetch("http://localhost:8081/order/place", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ username })
+})
+.then(res => res.text())
+.then(data => {
+
+    document.querySelector(".checkout-box").innerHTML = `
+        <div class="success-row">
+            <i class="fa-solid fa-square-check success-icon"></i>
+            <h2 class="success-text">Order Placed Successfully!</h2>
+        </div>
+    `;
+})
+.catch(err => {
+    console.log(err);
+    alert("Order failed");
+});
+}
+    </script>
+
+</body>
+</html>
