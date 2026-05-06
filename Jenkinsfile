@@ -1,0 +1,32 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage('Clone Repo') {
+            steps {
+                git 'https://github.com/Poornimaa-Shri/Zenvora-Testing.git'
+            }
+        }
+
+        stage('Build & Test') {
+            steps {
+                dir('Automation/zenvora-automation') {
+                    bat 'mvn clean test'
+                }
+            }
+        }
+
+        stage('Publish TestNG Report') {
+            steps {
+                publishTestNGResults testResultsPattern: 'Automation/zenvora-automation/test-output/testng-results.xml'
+            }
+        }
+    }
+}
