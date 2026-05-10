@@ -1,69 +1,78 @@
-🛋️ Zenvora Living – E-Commerce Testing Project
+🛋️ Zenvora Living – End-to-End E-Commerce Testing Project
+📌 Project Overview
 
-📌 Overview
+Zenvora Living is a full-stack furniture e-commerce application designed to demonstrate comprehensive software testing practices across the development lifecycle.
 
-Zenvora Living is a furniture e-commerce application.
-This project includes full testing of frontend, backend, APIs, automation, performance, and CI/CD.
+This project covers manual testing, API testing, UI automation, performance testing, and CI/CD integration, ensuring quality validation from frontend to backend.
 
-🛠️ Tech Stack
-
-Frontend:
-HTML, CSS, JavaScript
-
-Backend:
-Java, Spring Boot, REST APIs, MySQL
-
-Testing Tools:
-Postman, Selenium, JMeter, Jenkins, Maven
-
-📂 Project Structure
-
-frontend/ → UI code
-backend/ → Spring Boot server
-automation/ → Selenium test scripts
-jmeter/ → Performance test plans
-postman/ → API collections
-manual-testing/ → Test cases & reports
-Jenkinsfile → CI/CD pipeline
-
-✅ Testing Covered
-
-Manual Testing
+🏗️ System Architecture
+Frontend: HTML, CSS, JavaScript
+Backend: Spring Boot (RESTful APIs)
+Database: MySQL
+Build Tool: Maven
+Version Control: Git & GitHub
+🧪 Testing Scope
+🔹 Manual Testing
 Functional testing
 Negative testing
-Test case design
-Bug reporting
+Test case design & execution
+Defect identification and reporting
+End-to-end scenario validation
+🔹 API Testing (Postman)
 
-API Testing (Postman)
-Signup API
-Login API
-Products API
-Cart API
-Checkout API
-Orders API
+Validated REST APIs including:
 
-Automation Testing (Selenium)
-Login
-Add to cart
-Remove from cart
-Checkout
-Wishlist
-Search
-Logout
+User Signup
+User Login
+Product Management
+Cart Operations
+Checkout Process
+Order Retrieval
 
-Performance Testing (JMeter)
+Focus Areas:
 
-Full flow tested:
-Login → Products → Add to Cart → View Cart → Checkout
+Status code validation
+Request/Response verification
+Data integrity checks
+Error handling scenarios
+🔹 Automation Testing (Selenium WebDriver)
+Login automation
+Add to cart functionality
+Checkout workflow
+Wishlist management
+Search functionality
+Cross-browser validation (if applicable)
 
-Includes CSV data-driven testing and assertions.
+Framework Approach:
 
-CI/CD (Jenkins)
-GitHub integration
-Maven build
-Automated test execution
-Build reporting
+Page Object Model (POM)
+TestNG
+Maven integration
+🔹 Performance Testing (Apache JMeter)
 
+Tested complete e-commerce workflow:
+
+Login → Product Listing → Add to Cart → View Cart → Checkout
+
+Implemented:
+
+CSV Data-Driven Testing
+Load testing scenarios
+Response assertions
+Performance validation
+🔹 CI/CD Integration (Jenkins)
+GitHub repository integration
+Automated build execution
+Maven build pipeline
+Test execution through CI
+Continuous integration workflow setup
+🎯 Key Achievements
+End-to-End system validation
+API reliability verification
+UI automation coverage
+Performance benchmarking
+CI/CD pipeline implementation
+Real-world testing workflow simulation
 👩‍💻 Author
 
 Poornimaa Shri
