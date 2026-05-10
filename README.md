@@ -1,26 +1,69 @@
-# 🛋️ Zenvora Living Furniture E-commerce Testing Project
+🛋️ Zenvora Living – E-Commerce Testing Project
 
-## 📌 Project Overview
-This project includes full testing of a furniture e-commerce web application.
+📌 Overview
 
-## 🔧 Tech Stack
-- Frontend: HTML, CSS, JS
-- Backend: Java (Eclipse)
-- API Testing: Postman
-- Automation: Selenium (planned)
+Zenvora Living is a furniture e-commerce application.
+This project includes full testing of frontend, backend, APIs, automation, performance, and CI/CD.
 
-## 📂 Project Structure
-- frontend/ → UI code
-- backend/ → Server code
-- api-testing/ → Postman collections
-- manual-testing/ → Test cases & bug reports
+🛠️ Tech Stack
 
-## ✅ Testing Covered
-- Functional Testing
-- API Testing
-- Negative Testing
-- Performance Testing
-- UI Testing
+Frontend:
+HTML, CSS, JavaScript
 
-## 🚀 Author
-Poornimaa Shri 
+Backend:
+Java, Spring Boot, REST APIs, MySQL
+
+Testing Tools:
+Postman, Selenium, JMeter, Jenkins, Maven
+
+📂 Project Structure
+
+frontend/ → UI code
+backend/ → Spring Boot server
+automation/ → Selenium test scripts
+jmeter/ → Performance test plans
+postman/ → API collections
+manual-testing/ → Test cases & reports
+Jenkinsfile → CI/CD pipeline
+
+✅ Testing Covered
+
+Manual Testing
+Functional testing
+Negative testing
+Test case design
+Bug reporting
+
+API Testing (Postman)
+Signup API
+Login API
+Products API
+Cart API
+Checkout API
+Orders API
+
+Automation Testing (Selenium)
+Login
+Add to cart
+Remove from cart
+Checkout
+Wishlist
+Search
+Logout
+
+Performance Testing (JMeter)
+
+Full flow tested:
+Login → Products → Add to Cart → View Cart → Checkout
+
+Includes CSV data-driven testing and assertions.
+
+CI/CD (Jenkins)
+GitHub integration
+Maven build
+Automated test execution
+Build reporting
+
+👩‍💻 Author
+
+Poornimaa Shri
